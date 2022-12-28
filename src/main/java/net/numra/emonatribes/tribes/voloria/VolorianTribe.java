@@ -7,7 +7,6 @@ import java.util.PriorityQueue;
 
 public class VolorianTribe extends Tribe {
     public VolorianTribe() {
-        // TODO
         this.abilities = new ArrayList<>();
         this.levelingData = new PriorityQueue<>();
     }

@@ -1,36 +1,35 @@
 package net.numra.emonatribes.tribes;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.InventoryProvider;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.EnumMap;
 import java.util.List;
 
 import static net.numra.emonatribes.EmonaTribesMain.ritualBlockYucky;
 
-public class RitualBlockEntity extends BlockEntity implements Inventory {
-    boolean inUse = false;
-    ItemStack item = ItemStack.EMPTY;
+public class RitualBlockEntity extends BlockEntity implements SidedInventory, InventoryProvider {
+    private boolean inUse = false;
+    private ItemStack item = ItemStack.EMPTY;
 
     public RitualBlockEntity(BlockPos pos, BlockState state) {
         super(ritualBlockYucky, pos, state);
     }
 
-    public ActionResult open(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit, EnumMap<TribalRitualType, ItemStack> ritualCosts, Text containerDisplayName) {
+    public ActionResult open(BlockState state, World world, BlockPos pos, PlayerEntity player) {
         if (inUse) return ActionResult.FAIL;
         if (world.isClient) return ActionResult.SUCCESS;
-        RitualScreenHandlerFactory factory = new RitualScreenHandlerFactory(containerDisplayName, this);
-        player.openHandledScreen(factory);
+        player.openHandledScreen(state.createScreenHandlerFactory( world, pos));
         return ActionResult.SUCCESS;
     }
 
@@ -89,4 +88,26 @@ public class RitualBlockEntity extends BlockEntity implements Inventory {
     public void clear() {
         item = ItemStack.EMPTY;
     }
+
+    @Override
+    public SidedInventory getInventory(BlockState state, WorldAccess world, BlockPos pos) {
+        return this;
+    }
+
+    @Override
+    public int[] getAvailableSlots(Direction side) {
+        return new int[0];
+    }
+
+    @Override
+    public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
+        return false;
+    }
+
+    @Override
+    public boolean canExtract(int slot, ItemStack stack, Direction dir) {
+        return false;
+    }
+
+
 }

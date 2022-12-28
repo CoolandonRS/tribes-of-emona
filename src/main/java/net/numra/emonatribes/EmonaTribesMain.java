@@ -11,11 +11,12 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import net.numra.emonatribes.tribes.RitualBlockEntity;
-import net.numra.emonatribes.tribes.RitualScreenHandler;
+import net.numra.emonatribes.tribes.RitualScreenDescription;
 import net.numra.emonatribes.tribes.voloria.VolorianRitualBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,14 +36,13 @@ public class EmonaTribesMain implements ModInitializer {
 	}
 
 	public static BlockEntityType<RitualBlockEntity> ritualBlockYucky; // named yucky since its yucky code that mojang makes me use.
-	public static ScreenHandlerType<RitualScreenHandler> ritualScreenHandlerYucky; // see above;
-
+	public static ScreenHandlerType<RitualScreenDescription> ritualScreenHandlerYucky; //see above;
 	private void initThings() {
 		Block volorianRitualBlock = new VolorianRitualBlock(FabricBlockSettings.of(Material.STONE).strength(25F, 100F).requiresTool());
 		Registry.register(Registries.BLOCK, new Identifier(ModConstants.internalName, "ritualblock_volorian"), volorianRitualBlock);
 		Registry.register(Registries.ITEM, new Identifier(ModConstants.internalName, "ritualblock_volorian"), new BlockItem(volorianRitualBlock, new FabricItemSettings().fireproof().maxCount(1).rarity(Rarity.RARE)));
 
 		ritualBlockYucky = Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(ModConstants.internalName, "ritualblock"), FabricBlockEntityTypeBuilder.create(RitualBlockEntity::new, volorianRitualBlock).build());
-		ritualScreenHandlerYucky = ScreenHandlerRegistry.registerSimple(new Identifier(ModConstants.internalName, "ritualscreen"), RitualScreenHandler::new);
+		ritualScreenHandlerYucky = Registry.register(Registries.SCREEN_HANDLER, new Identifier(ModConstants.internalName, "ritualgui"), new ScreenHandlerType<>((syncId, playerInventory) -> new RitualScreenDescription(syncId, playerInventory, ScreenHandlerContext.EMPTY)));
 	}
 }

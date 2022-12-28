@@ -2,6 +2,7 @@ package net.numra.emonatribes.tribes;
 
 public enum TribalRitualType {
     Creation, //create tribe
+    Membership, //join tribe
     Founding, //found city
     Curious, //lvl 1-5
     Student, //lvl 6-10
