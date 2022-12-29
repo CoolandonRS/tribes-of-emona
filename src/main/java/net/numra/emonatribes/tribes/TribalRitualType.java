@@ -9,5 +9,6 @@ public enum TribalRitualType {
     Expert, //lvl 11-15
     Master, //lvl 16-20
     Ascended, //lvl 21-25
-    Godhood //lvl 26
+    Demigod,
+    Godhood
 }

@@ -29,7 +29,7 @@ public class RitualBlockEntity extends BlockEntity implements SidedInventory, In
     public ActionResult open(BlockState state, World world, BlockPos pos, PlayerEntity player) {
         if (inUse) return ActionResult.FAIL;
         if (world.isClient) return ActionResult.SUCCESS;
-        player.openHandledScreen(state.createScreenHandlerFactory( world, pos));
+        player.openHandledScreen(state.createScreenHandlerFactory(world, pos));
         return ActionResult.SUCCESS;
     }
 

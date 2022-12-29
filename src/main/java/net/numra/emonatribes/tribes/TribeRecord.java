@@ -1,16 +1,31 @@
 package net.numra.emonatribes.tribes;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 
 import java.util.EnumMap;
+import java.util.Map;
+
+import static java.util.Map.entry;
+import static net.numra.emonatribes.tribes.TribalRitualType.*;
 
 public enum TribeRecord {
-    Voloria, None;
+    None,
+    Voloria;
 
     public EnumMap<TribalRitualType, ItemStack> getRituals() {
         return switch (this) {
-            case Voloria -> new EnumMap<>(TribalRitualType.class);
             case None -> null;
+            case Voloria -> new EnumMap<>(Map.ofEntries(
+                    entry(Creation, new ItemStack(Items.GOLD_INGOT, 1)),
+                    entry(Founding, new ItemStack(Items.BARRIER, 1)), //TODO
+                    entry(Curious, new ItemStack(Items.GOLD_INGOT, 1)),
+                    entry(Student, new ItemStack(Items.BARRIER, 1)), //TODO
+                    entry(Expert, new ItemStack(Items.BARRIER, 1)), // TODO
+                    entry(Master, new ItemStack(Items.NETHERITE_SCRAP, 1)),
+                    entry(Ascended, new ItemStack(Items.NETHERITE_INGOT, 1)),
+                    entry(Godhood, new ItemStack(Items.BARRIER, 1)) // TODO
+            ));
         };
     }
 }

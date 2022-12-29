@@ -9,9 +9,11 @@ import java.util.Map;
 import java.util.Queue;
 
 public abstract class Tribe implements Serializable {
-    protected int maxLevel = 26;
+    protected int maxLevel = 25;
     protected List<TribeAbility> abilities;
     protected Queue<LevelingData> levelingData;
+    protected GodLevelData godData;
+    protected GodLevelData demigodData;
 
     public void levelUp() {
         levelingData.remove().trigger(abilities);
