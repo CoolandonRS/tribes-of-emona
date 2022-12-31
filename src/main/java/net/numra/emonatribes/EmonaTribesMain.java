@@ -2,6 +2,7 @@ package net.numra.emonatribes;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
@@ -32,10 +33,12 @@ public class EmonaTribesMain implements ModInitializer {
 	public void onInitialize() {
 		logger.info("Loading...");
 		initThings();
+		initPacketListeners();
 		logger.info("Loaded successfully!");
 	}
 
 	public static BlockEntityType<RitualBlockEntity> ritualBlockYucky; // named yucky since its yucky code that mojang makes me use.
+
 	public static ScreenHandlerType<RitualScreenDescription> ritualScreenHandlerYucky; //see above;
 	private void initThings() {
 		Block volorianRitualBlock = new VolorianRitualBlock(FabricBlockSettings.of(Material.STONE).strength(25F, 100F).requiresTool());
@@ -44,5 +47,14 @@ public class EmonaTribesMain implements ModInitializer {
 
 		ritualBlockYucky = Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(ModConstants.internalName, "ritualblock"), FabricBlockEntityTypeBuilder.create(RitualBlockEntity::new, volorianRitualBlock).build());
 		ritualScreenHandlerYucky = Registry.register(Registries.SCREEN_HANDLER, new Identifier(ModConstants.internalName, "ritualgui"), new ScreenHandlerType<>((syncId, playerInventory) -> new RitualScreenDescription(syncId, playerInventory, ScreenHandlerContext.EMPTY)));
+	}
+	private void initPacketListeners() {
+		ServerPlayNetworking.registerGlobalReceiver(ModConstants.sacrificePacketID, (server, player, handler, data, sender) -> {
+			if (!(player.currentScreenHandler instanceof RitualScreenDescription ritualScreen)) {
+				EmonaTribesMain.logger.error("Player isn't in RitualScreen after sending sacrifice packet");
+				return;
+			}
+			server.execute(ritualScreen::clickSacrificeRunnable);
+		});
 	}
 }

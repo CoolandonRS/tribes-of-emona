@@ -5,14 +5,18 @@ import io.github.cottonmc.cotton.gui.widget.WButton;
 import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WItemSlot;
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.text.Text;
 import net.numra.emonatribes.EmonaTribesMain;
+import net.numra.emonatribes.ModConstants;
 
 import java.util.Optional;
 
@@ -43,7 +47,10 @@ public class RitualScreenDescription extends SyncedGuiDescription {
         WButton button = new WButton(Text.of("SACRIFICE!"));
         button.setSize(50, 0);
 //        button.setIcon(new ItemIcon(new ItemStack(Items.BLAZE_POWDER)));
-        button.setOnClick(this::clickSacrificeRunnable);
+        button.setOnClick(() -> {
+            if (!world.isClient) throw new RuntimeException("How is this possible");
+            ClientPlayNetworking.send(ModConstants.sacrificePacketID, PacketByteBufs.empty());
+        });
 
         root.add(button, 6, 4);
 
@@ -53,7 +60,9 @@ public class RitualScreenDescription extends SyncedGuiDescription {
         return this;
     }
 
-    private void clickSacrificeRunnable() {
+    public void clickSacrificeRunnable() {
+        System.out.println("WOOOOO");
+        System.out.println(world.isClient);
         var pos = screenHandlerContext.get((w, bp) -> bp).orElse(null);
         if (pos == null) {
             System.out.println(Thread.currentThread().getId());
@@ -62,9 +71,9 @@ public class RitualScreenDescription extends SyncedGuiDescription {
             return;
         }
         BlockEntity be = world.getBlockEntity(pos);
-        if (!(be instanceof RitualBlockEntity rbe)) throw new IllegalArgumentException("Excuse me what?");
+        if (!(be instanceof RitualBlockEntity rbe)) throw new IllegalArgumentException("Excuse me what? 1");
         BlockState bs = world.getBlockState(pos);
-        if (!(bs.getBlock() instanceof TribalRitualBlock)) throw new IllegalArgumentException("Excuse me what?");
+        if (!(bs.getBlock() instanceof TribalRitualBlock)) throw new IllegalArgumentException("Excuse me what? 2");
         ItemStack item = rbe.getStack(0);
         // FIXME!!!!!! Make a way to get a TribeData from the right player using pInv.player!!!!
         // FIXME Cont!!!!!! Very temporary until I make that system, but it goes to github anyway because :)
@@ -76,7 +85,10 @@ public class RitualScreenDescription extends SyncedGuiDescription {
         int count = tribeName.getRituals().get(ritualType).getCount();
         blockInventory.removeStack(0, count);
         switch (ritualType) {
-            case Creation -> tribeData.joinTribe(tribeName, true);
+            case Creation -> {
+                ModConstants.globalTribeAuthority.setCreated(tribeName, true);
+                tribeData.joinTribe(tribeName, true);
+            }
             case Membership -> tribeData.joinTribe(tribeName);
             case Founding -> {
                 // TODO: NOT YET IMPLEMENTED
@@ -86,6 +98,7 @@ public class RitualScreenDescription extends SyncedGuiDescription {
                 // TODO: NOT YEET IMPLEMENTED..
             }
             case Godhood -> {
+                ModConstants.globalTribeAuthority.setHasGod(tribeName, true);
                 // TODO: NOT YET IMPLEMENTED.
             }
         }
