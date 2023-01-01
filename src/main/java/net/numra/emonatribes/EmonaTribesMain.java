@@ -1,11 +1,12 @@
 package net.numra.emonatribes;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
-import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntityType;
@@ -18,28 +19,25 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import net.numra.emonatribes.tribes.RitualBlockEntity;
 import net.numra.emonatribes.tribes.RitualScreenDescription;
+import net.numra.emonatribes.tribes.TribeData;
 import net.numra.emonatribes.tribes.voloria.VolorianRitualBlock;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-@SuppressWarnings("deprecation")
 public class EmonaTribesMain implements ModInitializer {
-	// This logger is used to write text to the console and the log file.
-	// It is considered best practice to use your mod id as the logger's name.
-	// That way, it's clear which mod wrote info, warnings, and errors.
-	public static final Logger logger = LoggerFactory.getLogger(ModConstants.prettyName);
 
 	@Override
 	public void onInitialize() {
-		logger.info("Loading...");
+		ModConstants.logger.info("Loading...");
 		initThings();
+		initEventListeners();
 		initPacketListeners();
-		logger.info("Loaded successfully!");
+		ModConstants.logger.info("Loaded successfully!");
+
 	}
 
 	public static BlockEntityType<RitualBlockEntity> ritualBlockYucky; // named yucky since its yucky code that mojang makes me use.
 
 	public static ScreenHandlerType<RitualScreenDescription> ritualScreenHandlerYucky; //see above;
+
 	private void initThings() {
 		Block volorianRitualBlock = new VolorianRitualBlock(FabricBlockSettings.of(Material.STONE).strength(25F, 100F).requiresTool());
 		Registry.register(Registries.BLOCK, new Identifier(ModConstants.internalName, "ritualblock_volorian"), volorianRitualBlock);
@@ -51,10 +49,24 @@ public class EmonaTribesMain implements ModInitializer {
 	private void initPacketListeners() {
 		ServerPlayNetworking.registerGlobalReceiver(ModConstants.sacrificePacketID, (server, player, handler, data, sender) -> {
 			if (!(player.currentScreenHandler instanceof RitualScreenDescription ritualScreen)) {
-				EmonaTribesMain.logger.error("Player isn't in RitualScreen after sending sacrifice packet");
+				ModConstants.logger.error("Player isn't in RitualScreen after sending sacrifice packet");
 				return;
 			}
 			server.execute(ritualScreen::clickSacrificeRunnable);
 		});
+	}
+	private void initEventListeners() {
+		ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
+			ModConstants.globalTribeAuthority.serializeGlobalTribeAuthority();
+		});
+		ServerPlayConnectionEvents.JOIN.register((handler, packetSender, server) -> {
+			TribeData tribeData = TribeData.deserialize(handler.player);
+			ModConstants.tribeDataAuthority.register(tribeData);
+		});
+		ServerPlayConnectionEvents.DISCONNECT.register(((handler, server) -> {
+			TribeData data = ModConstants.tribeDataAuthority.get(handler.player.getUuid());
+			data.serialize();
+			ModConstants.tribeDataAuthority.unregister(data);
+		}));
 	}
 }

@@ -1,22 +1,33 @@
 package net.numra.emonatribes.data;
 
-import java.io.*;
-import java.nio.file.Path;
+import net.numra.emonatribes.ModConstants;
+import org.jetbrains.annotations.Nullable;
 
-public class SerializeUtil {
-    public static <T extends Serializable> void save(T data, Path path) throws IOException {
-        try (FileOutputStream fos = new FileOutputStream(path.toFile())) {
-            try (ObjectOutputStream oos = new ObjectOutputStream(fos)) {
-                oos.writeObject(data);
+import java.io.*;
+import java.util.function.Supplier;
+
+public final class SerializeUtil {
+    public static <T> T deserialize(Class<T> clazz, File file, @Nullable String errMsg, Supplier<T> failHandler) {
+        if (!file.exists()) return failHandler.get();
+        try (FileInputStream fis = new FileInputStream(file)) {
+            try (ObjectInputStream ois = new ObjectInputStream(fis)) {
+                Object obj = ois.readObject();
+                if (!obj.getClass().isAssignableFrom(clazz)) throw new Exception("jump to catch");
+                return clazz.cast(obj);
             }
+        } catch (Exception e) {
+            if (errMsg != null) ModConstants.logger.error(errMsg);
+            return failHandler.get();
         }
     }
 
-    public static Object read(Path path) throws IOException, ClassNotFoundException {
-        try (FileInputStream fis = new FileInputStream(path.toFile())) {
-            try (ObjectInputStream ois = new ObjectInputStream(fis)) {
-                return ois.readObject();
+    public static <T> void serialize(T obj, File file, @Nullable String errMsg) {
+        try (FileOutputStream fos = new FileOutputStream(file)) {
+            try (ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+                oos.writeObject(obj);
             }
+        } catch (Exception e) {
+            if (errMsg != null) ModConstants.logger.error(errMsg);
         }
     }
 }

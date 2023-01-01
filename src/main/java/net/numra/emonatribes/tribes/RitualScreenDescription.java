@@ -12,7 +12,6 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.text.Text;
 import net.numra.emonatribes.EmonaTribesMain;
@@ -67,7 +66,7 @@ public class RitualScreenDescription extends SyncedGuiDescription {
         if (pos == null) {
             System.out.println(Thread.currentThread().getId());
             System.err.println(screenHandlerContext.get((w, bp) -> new Object()) == Optional.empty());
-            EmonaTribesMain.logger.error("POS is null! This is a bug!");
+            ModConstants.logger.error("POS is null! This is a bug!");
             return;
         }
         BlockEntity be = world.getBlockEntity(pos);
@@ -75,9 +74,7 @@ public class RitualScreenDescription extends SyncedGuiDescription {
         BlockState bs = world.getBlockState(pos);
         if (!(bs.getBlock() instanceof TribalRitualBlock)) throw new IllegalArgumentException("Excuse me what? 2");
         ItemStack item = rbe.getStack(0);
-        // FIXME!!!!!! Make a way to get a TribeData from the right player using pInv.player!!!!
-        // FIXME Cont!!!!!! Very temporary until I make that system, but it goes to github anyway because :)
-        TribeData tribeData = new TribeData();
+        TribeData tribeData = ModConstants.tribeDataAuthority.get(playerInventory.player.getUuid());
         var castable = RitualUtil.getCastableRitualsWithItemStack(tribeData, item);
         if (castable.isEmpty()) return;
         TribeRecord tribeName = (TribeRecord) castable.keySet().toArray()[0];

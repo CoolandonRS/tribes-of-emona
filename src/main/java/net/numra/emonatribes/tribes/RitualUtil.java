@@ -31,7 +31,9 @@ public final class RitualUtil {
             out.get(name).add(TribalRitualType.Master);
         } else if (level < 25) {
             out.get(name).add(TribalRitualType.Ascended);
-        } else if (level == 25 && !gta.hasGod(name)) {
+        } else if (level == 25 && gta.hasHadGod(name) && !data.isLeader()) {
+            out.get(name).add(TribalRitualType.Demigod);
+        } else if (level == 25 && !gta.hasGod(name) && data.isLeader()) {
             out.get(name).add(TribalRitualType.Godhood);
         }
         return out;
@@ -41,7 +43,7 @@ public final class RitualUtil {
         // THE ABSOLUTELY MASSIVE ONE LINER
         // Why is it one line? Because it can be.
         // Should it be more than one? Absolutely.
-        // Am I going to make it more than one? Never!
+        // Am I going to make it more than one? Never! (Unless it breaks)
         // Is it ironic that this comment has multiple lines and the function doesn't? Maybe...
         // But it's perfect in the worst way possible.
         // We just hope it never breaks :)

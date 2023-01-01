@@ -1,6 +1,9 @@
 package net.numra.emonatribes.tribes;
 
-import java.io.Serializable;
+import net.numra.emonatribes.ModConstants;
+import net.numra.emonatribes.data.SerializeUtil;
+
+import java.io.*;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -28,8 +31,13 @@ public class GlobalTribeAuthority implements Serializable {
     public boolean hasGod(TribeRecord tr) {
         return tribes.get(tr).hasGod;
     }
+
     public void setHasGod(TribeRecord tr, boolean val) {
+        if (val && !hasHadGod(tr)) tribes.get(tr).hasHadGod = true;
         tribes.get(tr).hasGod = val;
+    }
+    public boolean hasHadGod(TribeRecord tr) {
+        return tribes.get(tr).hasHadGod;
     }
 
     public GlobalTribeAuthority() {
@@ -40,13 +48,27 @@ public class GlobalTribeAuthority implements Serializable {
     }
 
     @SuppressWarnings("ProtectedMemberInFinalClass")
-    public final static class Data {
+    public final static class Data implements Serializable {
+
         protected boolean created;
         protected boolean hasGod;
-
+        protected boolean hasHadGod;
         public Data() {
             created = false;
             hasGod = false;
+            hasHadGod = false;
         }
+
+    }
+    public static GlobalTribeAuthority deserializeGlobalTribeAuthority() {
+        File file = new File(ModConstants.saveDir, "gta" + ModConstants.saveFileExt);
+        String err = "Failed to load GlobalTribeAuthority, replacing";
+        return SerializeUtil.deserialize(GlobalTribeAuthority.class, file, err, GlobalTribeAuthority::new);
+    }
+
+    public void serializeGlobalTribeAuthority() {
+        File file = new File(ModConstants.saveDir, "gta" + ModConstants.saveFileExt);
+        String err = "Failed to save GlobalTribeAuthority";
+        SerializeUtil.serialize(this, file, err);
     }
 }
