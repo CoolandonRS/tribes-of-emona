@@ -1,6 +1,7 @@
 package net.numra.emonatribes.tribes;
 
 import lombok.Getter;
+import lombok.experimental.Accessors;
 import net.numra.emonatribes.ModConstants;
 import net.numra.emonatribes.data.SerializeUtil;
 
@@ -50,6 +51,7 @@ public class GlobalTribeAuthority implements Serializable {
 
     @SuppressWarnings("ProtectedMemberInFinalClass")
     @Getter
+    @Accessors(fluent = true)
     public final static class Data implements Serializable {
         protected boolean created;
         protected boolean hasGod;

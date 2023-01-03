@@ -16,7 +16,7 @@ public final class RitualUtil {
         if (name == TribeRecord.None) {
             EnumMap<TribeRecord, GlobalTribeAuthority.Data> map = gta.get();
             map.remove(TribeRecord.None);
-            map.forEach((key, value) -> out.put(key, List.of(value.isCreated() ? TribalRitualType.Membership : TribalRitualType.Creation)));
+            map.forEach((key, value) -> out.put(key, List.of(value.created() ? TribalRitualType.Membership : TribalRitualType.Creation)));
             return out;
         }
         int level = values.getLevel();
