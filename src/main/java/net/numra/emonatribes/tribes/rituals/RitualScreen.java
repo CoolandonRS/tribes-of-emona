@@ -1,4 +1,4 @@
-package net.numra.emonatribes.tribes;
+package net.numra.emonatribes.tribes.rituals;
 
 import io.github.cottonmc.cotton.gui.client.CottonInventoryScreen;
 import net.minecraft.entity.player.PlayerEntity;

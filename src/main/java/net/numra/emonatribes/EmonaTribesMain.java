@@ -17,8 +17,8 @@ import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
-import net.numra.emonatribes.tribes.RitualBlockEntity;
-import net.numra.emonatribes.tribes.RitualScreenDescription;
+import net.numra.emonatribes.tribes.rituals.RitualBlockEntity;
+import net.numra.emonatribes.tribes.rituals.RitualScreenDescription;
 import net.numra.emonatribes.tribes.TribeData;
 import net.numra.emonatribes.tribes.voloria.VolorianRitualBlock;
 
@@ -28,7 +28,7 @@ public class EmonaTribesMain implements ModInitializer {
 	public void onInitialize() {
 		ModConstants.logger.info("Loading...");
 		initThings();
-		initEventListeners();
+		initPrimaryEventListeners();
 		initPacketListeners();
 		ModConstants.logger.info("Loaded successfully!");
 
@@ -46,6 +46,7 @@ public class EmonaTribesMain implements ModInitializer {
 		ritualBlockYucky = Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(ModConstants.internalName, "ritualblock"), FabricBlockEntityTypeBuilder.create(RitualBlockEntity::new, volorianRitualBlock).build());
 		ritualScreenHandlerYucky = Registry.register(Registries.SCREEN_HANDLER, new Identifier(ModConstants.internalName, "ritualgui"), new ScreenHandlerType<>((syncId, playerInventory) -> new RitualScreenDescription(syncId, playerInventory, ScreenHandlerContext.EMPTY)));
 	}
+
 	private void initPacketListeners() {
 		ServerPlayNetworking.registerGlobalReceiver(ModConstants.sacrificePacketID, (server, player, handler, data, sender) -> {
 			if (!(player.currentScreenHandler instanceof RitualScreenDescription ritualScreen)) {
@@ -55,7 +56,7 @@ public class EmonaTribesMain implements ModInitializer {
 			server.execute(ritualScreen::clickSacrificeRunnable);
 		});
 	}
-	private void initEventListeners() {
+	private void initPrimaryEventListeners() {
 		ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
 			ModConstants.globalTribeAuthority.serializeGlobalTribeAuthority();
 		});

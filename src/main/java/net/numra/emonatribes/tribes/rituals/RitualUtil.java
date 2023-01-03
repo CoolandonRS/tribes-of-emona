@@ -1,7 +1,8 @@
-package net.numra.emonatribes.tribes;
+package net.numra.emonatribes.tribes.rituals;
 
 import net.minecraft.item.ItemStack;
 import net.numra.emonatribes.ModConstants;
+import net.numra.emonatribes.tribes.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -15,7 +16,7 @@ public final class RitualUtil {
         if (name == TribeRecord.None) {
             EnumMap<TribeRecord, GlobalTribeAuthority.Data> map = gta.get();
             map.remove(TribeRecord.None);
-            map.forEach((key, value) -> out.put(key, List.of(value.created ? TribalRitualType.Membership : TribalRitualType.Creation)));
+            map.forEach((key, value) -> out.put(key, List.of(value.isCreated() ? TribalRitualType.Membership : TribalRitualType.Creation)));
             return out;
         }
         int level = values.getLevel();

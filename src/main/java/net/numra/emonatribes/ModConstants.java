@@ -3,6 +3,7 @@ package net.numra.emonatribes;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
 import net.numra.emonatribes.tribes.GlobalTribeAuthority;
+import net.numra.emonatribes.tribes.hooks.HookManager;
 import net.numra.emonatribes.tribes.TribeDataAuthority;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,7 @@ public final class ModConstants {
     public static final TribeDataAuthority tribeDataAuthority = new TribeDataAuthority(); // Does NOT need to be serialized/deserialized
     public static final Identifier sacrificePacketID = new Identifier(ModConstants.internalName, "sacrifice");
     public static final String saveFileExt = ".tribedata";
+    public static final HookManager hookManager = new HookManager();
 
     static {
         saveDir = new File(FabricLoader.getInstance().getGameDir().toFile(), "emonatribes");

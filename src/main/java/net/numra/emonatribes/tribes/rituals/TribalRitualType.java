@@ -1,4 +1,4 @@
-package net.numra.emonatribes.tribes;
+package net.numra.emonatribes.tribes.rituals;
 
 public enum TribalRitualType {
     Creation, //create tribe

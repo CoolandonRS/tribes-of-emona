@@ -1,4 +1,4 @@
-package net.numra.emonatribes.tribes;
+package net.numra.emonatribes.tribes.rituals;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
@@ -40,6 +40,6 @@ public abstract class TribalRitualBlock extends Block implements BlockEntityProv
     @Override
     public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos) {
         if (!(world.getBlockEntity(pos) instanceof RitualBlockEntity rbe)) return null;
-        return new RitualScreenHandlerFactory(containerDisplayName, rbe, world, pos);
+        return new RitualScreenHandlerFactory(containerDisplayName, world, pos);
     }
 }

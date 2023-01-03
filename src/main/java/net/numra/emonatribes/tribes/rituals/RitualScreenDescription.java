@@ -1,4 +1,4 @@
-package net.numra.emonatribes.tribes;
+package net.numra.emonatribes.tribes.rituals;
 
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription;
 import io.github.cottonmc.cotton.gui.widget.WButton;
@@ -16,6 +16,7 @@ import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.text.Text;
 import net.numra.emonatribes.EmonaTribesMain;
 import net.numra.emonatribes.ModConstants;
+import net.numra.emonatribes.tribes.*;
 
 import java.util.Optional;
 
@@ -60,12 +61,8 @@ public class RitualScreenDescription extends SyncedGuiDescription {
     }
 
     public void clickSacrificeRunnable() {
-        System.out.println("WOOOOO");
-        System.out.println(world.isClient);
         var pos = screenHandlerContext.get((w, bp) -> bp).orElse(null);
         if (pos == null) {
-            System.out.println(Thread.currentThread().getId());
-            System.err.println(screenHandlerContext.get((w, bp) -> new Object()) == Optional.empty());
             ModConstants.logger.error("POS is null! This is a bug!");
             return;
         }
@@ -92,7 +89,7 @@ public class RitualScreenDescription extends SyncedGuiDescription {
             }
             case Curious, Student, Expert, Master, Ascended -> tribeData.getTribeValues().levelUp();
             case Demigod -> {
-                // TODO: NOT YEET IMPLEMENTED..
+                // TODO: NOT YET IMPLEMENTED..
             }
             case Godhood -> {
                 ModConstants.globalTribeAuthority.setHasGod(tribeName, true);

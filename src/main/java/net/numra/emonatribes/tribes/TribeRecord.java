@@ -2,12 +2,13 @@ package net.numra.emonatribes.tribes;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.numra.emonatribes.tribes.rituals.TribalRitualType;
 
 import java.util.EnumMap;
 import java.util.Map;
 
 import static java.util.Map.entry;
-import static net.numra.emonatribes.tribes.TribalRitualType.*;
+import static net.numra.emonatribes.tribes.rituals.TribalRitualType.*;
 
 public enum TribeRecord {
     None,

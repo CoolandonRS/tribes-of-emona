@@ -1,7 +1,9 @@
 package net.numra.emonatribes.tribes;
 
+import net.numra.emonatribes.tribes.hooks.HookType;
+
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 
 public abstract class TribeAbility implements Serializable {
     protected int level = 0;
@@ -16,7 +18,7 @@ public abstract class TribeAbility implements Serializable {
         return level;
     }
 
-    public abstract List<HookType> getHookList();
+    public abstract Set<HookType> getHookSet();
 
     // TODO: Add hooks
 }

@@ -1,4 +1,4 @@
-package net.numra.emonatribes.tribes;
+package net.numra.emonatribes.tribes.rituals;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.InventoryProvider;
