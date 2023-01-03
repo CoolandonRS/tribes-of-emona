@@ -1,11 +1,12 @@
 package net.numra.emonatribes.data;
 
+import lombok.experimental.UtilityClass;
 import net.numra.emonatribes.ModConstants;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.util.function.Supplier;
-
+@UtilityClass
 public final class SerializeUtil {
     public static <T> T deserialize(Class<T> clazz, File file, @Nullable String errMsg, Supplier<T> failHandler) {
         if (!file.exists()) return failHandler.get();

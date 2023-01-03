@@ -1,5 +1,8 @@
 package net.numra.emonatribes.tribes;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.entity.player.PlayerEntity;
 import net.numra.emonatribes.ModConstants;
 import net.numra.emonatribes.data.SerializeUtil;
@@ -12,18 +15,15 @@ import java.util.UUID;
  * Per player data containing data about their tribe
  */
 public class TribeData implements Serializable {
+    @Setter(value = AccessLevel.PRIVATE)
     private transient PlayerEntity player;
+    @Getter
     private TribeRecord tribeName;
-    private Tribe tribeVal;
+    @Getter
+    private Tribe tribeValues;
+    @Getter
     private boolean leader;
 
-    public TribeRecord getTribeName() {
-        return tribeName;
-    }
-
-    public Tribe getTribeValues() {
-        return tribeVal;
-    }
     public void joinTribe(TribeRecord tribe) {
         joinTribe(tribe, false);
     }
@@ -31,7 +31,7 @@ public class TribeData implements Serializable {
     public void joinTribe(TribeRecord tribe, boolean leader) {
         this.leader = leader;
         this.tribeName = tribe;
-        this.tribeVal = switch (tribe) {
+        this.tribeValues = switch (tribe) {
             case Voloria -> new VolorianTribe();
             case None -> null;
         };
@@ -45,16 +45,8 @@ public class TribeData implements Serializable {
         joinTribe(TribeRecord.None);
     }
 
-    public boolean isLeader() {
-        return leader;
-    }
-
-    public UUID uuid() {
+    public UUID getUUID() {
         return player.getUuid();
-    }
-
-    private void setPlayer(PlayerEntity player) {
-        this.player = player;
     }
 
     public static TribeData deserialize(PlayerEntity player) {

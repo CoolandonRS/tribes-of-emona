@@ -46,6 +46,6 @@ public class PlayerEntityHooks {
         if (pe.isInvulnerableTo(source)) return amount;
         if (amount == 0.0F) return amount;
         DamagedSpeak consensus = new DamagedSpeak(trigger(HookType.Damaged, new DamagedListen(source, amount, pe), DamagedSpeak.class));
-        return Math.max(amount + consensus.amountChange, 0.0F);
+        return Math.max(amount + consensus.getAmountChange(), 0.0F);
     }
 }

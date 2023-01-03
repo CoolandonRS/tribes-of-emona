@@ -16,7 +16,7 @@ public class GlobalTribeAuthority implements Serializable {
     private final EnumMap<TribeRecord, Data> tribes;
 
     /**
-     * @return A {@link Object#clone()} of {@link GlobalTribeAuthority}'s data so it can't be accidently modified.
+     * @return A {@link Object#clone()} of {@link GlobalTribeAuthority}'s data so it can't be accidentally modified.
      */
     public EnumMap<TribeRecord, Data> get() {
         return tribes.clone();
@@ -51,7 +51,7 @@ public class GlobalTribeAuthority implements Serializable {
 
     @SuppressWarnings("ProtectedMemberInFinalClass")
     @Getter
-    @Accessors(fluent = true)
+    @Accessors(fluent = true, chain = false)
     public final static class Data implements Serializable {
         protected boolean created;
         protected boolean hasGod;

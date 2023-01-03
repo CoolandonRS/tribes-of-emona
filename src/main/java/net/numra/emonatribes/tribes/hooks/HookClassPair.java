@@ -1,6 +1,9 @@
 package net.numra.emonatribes.tribes.hooks;
 
+import lombok.Value;
 import net.numra.emonatribes.tribes.hooks.sound.speak.GenericSpeak;
-
-public record HookClassPair(Class<?> listen, Class<? extends GenericSpeak> speak) {
+@Value
+public class HookClassPair {
+    Class<?> listen;
+    Class<? extends GenericSpeak> speak;
 }

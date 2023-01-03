@@ -1,7 +1,11 @@
 package net.numra.emonatribes.tribes.hooks.sound.listen;
 
+import lombok.Value;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 
-public record DropItemListen(ItemStack item, PlayerEntity player) {
+@Value
+public class DropItemListen {
+    ItemStack itemStack;
+    PlayerEntity player;
 }

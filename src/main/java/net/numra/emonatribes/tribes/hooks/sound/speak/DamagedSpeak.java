@@ -1,15 +1,16 @@
 package net.numra.emonatribes.tribes.hooks.sound.speak;
 
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 import net.numra.emonatribes.tribes.hooks.sound.IncompatibleSpeakException;
 
 import java.util.List;
 
+@Value
+@EqualsAndHashCode(callSuper = false)
 public class DamagedSpeak extends GenericSpeak {
-    public final float amountChange;
+    float amountChange;
 
-    public DamagedSpeak(float amountChange) {
-        this.amountChange = amountChange;
-    }
     public DamagedSpeak(List<? extends GenericSpeak> list) {
         float sum = 0.0F;
         for (GenericSpeak gs : list) {
@@ -20,3 +21,5 @@ public class DamagedSpeak extends GenericSpeak {
         this.amountChange = sum;
     }
 }
+
+

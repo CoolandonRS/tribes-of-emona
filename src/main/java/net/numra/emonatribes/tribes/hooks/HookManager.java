@@ -12,13 +12,12 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import static java.util.Map.entry;
-
 public class HookManager {
     private final EnumMap<HookType, List<GenericListener<?, ?>>> hookMap;
     private final EnumMap<HookType, HookClassPair> classMap;
 
     public <T extends GenericListener<?, ?>> void addHook(HookType type, T hook) throws IncompatibleDataException {
-        if (!hook.getDataClass().isAssignableFrom(classMap.get(type).listen())) throw new IncompatibleDataException();
+        if (!hook.getDataClass().isAssignableFrom(classMap.get(type).getListen())) throw new IncompatibleDataException();
         hookMap.get(type).add(hook);
     }
 
@@ -27,8 +26,8 @@ public class HookManager {
      */
     @Nullable
     public <R extends GenericSpeak> List<R> trigger(HookType type, Object data, Class<R> expectedReturnType) throws IncompatibleDataException {
-        if (!data.getClass().isAssignableFrom(classMap.get(type).listen())) throw new IncompatibleDataException();
-        Class<?> speakClass = classMap.get(type).speak();
+        if (!data.getClass().isAssignableFrom(classMap.get(type).getListen())) throw new IncompatibleDataException();
+        Class<?> speakClass = classMap.get(type).getSpeak();
         if (speakClass != null && !speakClass.isAssignableFrom(expectedReturnType)) throw new IncompatibleDataException();
         Stream<?> list = hookMap.get(type).stream().map(gl -> gl.execute(data));
         return speakClass == null ? List.of() : list.map(expectedReturnType::cast).toList();

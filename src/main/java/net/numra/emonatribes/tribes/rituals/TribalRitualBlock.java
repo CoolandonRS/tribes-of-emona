@@ -36,10 +36,11 @@ public abstract class TribalRitualBlock extends Block implements BlockEntityProv
         super(settings);
     }
 
+    @SuppressWarnings("deprecation")
     @Nullable
     @Override
     public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos) {
-        if (!(world.getBlockEntity(pos) instanceof RitualBlockEntity rbe)) return null;
+        if (!(world.getBlockEntity(pos) instanceof RitualBlockEntity)) return null;
         return new RitualScreenHandlerFactory(containerDisplayName, world, pos);
     }
 }

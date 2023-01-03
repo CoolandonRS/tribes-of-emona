@@ -1,5 +1,6 @@
 package net.numra.emonatribes.tribes.rituals;
 
+import lombok.experimental.UtilityClass;
 import net.minecraft.item.ItemStack;
 import net.numra.emonatribes.ModConstants;
 import net.numra.emonatribes.tribes.*;
@@ -7,6 +8,7 @@ import net.numra.emonatribes.tribes.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@UtilityClass
 public final class RitualUtil {
     public static Map<TribeRecord, List<TribalRitualType>> getCastableRituals(TribeData data) {
         Map<TribeRecord, List<TribalRitualType>> out = new HashMap<>();

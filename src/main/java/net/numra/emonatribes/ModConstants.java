@@ -1,20 +1,19 @@
 package net.numra.emonatribes;
 
+import lombok.experimental.UtilityClass;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
 import net.numra.emonatribes.tribes.GlobalTribeAuthority;
-import net.numra.emonatribes.tribes.hooks.HookManager;
 import net.numra.emonatribes.tribes.TribeDataAuthority;
+import net.numra.emonatribes.tribes.hooks.HookManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.File;
 
+@UtilityClass
 public final class ModConstants {
     public static final String prettyName = "Tribes of Emona";
-    // This logger is used to write text to the console and the log file.
-    // It is considered best practice to use your mod id as the logger's name.
-    // That way, it's clear which mod wrote info, warnings, and errors.
     public static final Logger logger = LoggerFactory.getLogger(prettyName);
     public static final String internalName = "emonatribes";
     public static final File saveDir;

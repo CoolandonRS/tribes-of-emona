@@ -6,11 +6,9 @@ import net.numra.emonatribes.tribes.TribeRecord;
 
 
 public class VolorianRitualBlock extends TribalRitualBlock {
-
-
     public VolorianRitualBlock(Settings settings) {
         super(settings);
-        this.ritualCosts = TribeRecord.Voloria.getRituals(); //TODO
+        this.ritualCosts = TribeRecord.Voloria.getRituals();
         this.containerDisplayName = Text.of("The Heart of the Opening");
     }
 }

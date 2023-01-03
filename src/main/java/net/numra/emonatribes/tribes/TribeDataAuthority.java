@@ -12,13 +12,13 @@ public class TribeDataAuthority {
     }
 
     public boolean register(TribeData td) {
-        if (map.containsKey(td.uuid())) return false;
-        map.put(td.uuid(), td);
+        if (map.containsKey(td.getUUID())) return false;
+        map.put(td.getUUID(), td);
         return true;
     }
 
     public void unregister(TribeData td) {
-        map.remove(td.uuid());
+        map.remove(td.getUUID());
     }
 
     public TribeDataAuthority() {
