@@ -5,22 +5,20 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.numra.emonatribes.ModConstants;
 import net.numra.emonatribes.misc.Discardable;
 import net.numra.emonatribes.tribes.hooks.HookType;
-import net.numra.emonatribes.tribes.hooks.sound.listen.AttackListen;
-import net.numra.emonatribes.tribes.hooks.sound.listen.EntityInteractListen;
-import net.numra.emonatribes.tribes.hooks.sound.listen.PlayerListen;
-import net.numra.emonatribes.tribes.hooks.sound.speak.FloatSpeak;
-import net.numra.emonatribes.tribes.hooks.sound.speak.GenericSpeak;
-import net.numra.emonatribes.tribes.hooks.sound.speak.VoidSpeak;
+import net.numra.emonatribes.tribes.hooks.sound.IncompatibleSpeakException;
+import net.numra.emonatribes.tribes.hooks.sound.listen.*;
+import net.numra.emonatribes.tribes.hooks.sound.speak.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -59,7 +57,23 @@ public class PlayerEntityHooks {
     }
 
     @WrapOperation(at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;handleFallDamage(FFLnet/minecraft/entity/damage/DamageSource;)Z"), method = "handleFallDamage")
-    private boolean fallHook(LivingEntity instance, float fallDistance, float damageMultiplier, DamageSource damageSource, Operation<Boolean> original) {
+    private boolean fallHook(LivingEntity instance, float distance, float multiplier, DamageSource source, Operation<Boolean> original) {
+        MultiSpeak consensus = new MultiSpeak(trigger(HookType.Fall, new FallListen(instance, distance, multiplier), MultiSpeak.class));
+        List<? extends GenericSpeak> speaks = consensus.getSpeaks();
+        if (speaks.get(0) instanceof FloatSpeak dist && speaks.get(1) instanceof FloatSpeak mult) {
+            return original.call(Math.max(distance + dist.getChange(), 0.0F), Math.max(multiplier + mult.getChange(), 0.0F), source);
+        } else throw new IncompatibleSpeakException();
+    }
 
+    @ModifyVariable(at = @At("HEAD"), method = "addExperience", argsOnly = true)
+    private int addXpHook(int gain) {
+        IntSpeak consensus = new IntSpeak(trigger(HookType.AddXp, new IntListen(this.asPE(), gain), IntSpeak.class));
+        return Math.max(gain + consensus.getChange(), 0);
+    }
+
+    @WrapOperation(at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/HungerManager;addExhaustion(F)V"), method = "addExhaustion")
+    private void hungerHook(HungerManager instance, float exhaustion, Operation<Void> original) {
+        FloatSpeak consensus = new FloatSpeak(trigger(HookType.Hunger, new FloatListen(this.asPE(), exhaustion), FloatSpeak.class));
+        original.call(Math.max(exhaustion + consensus.getChange(), 0.0F));
     }
 }

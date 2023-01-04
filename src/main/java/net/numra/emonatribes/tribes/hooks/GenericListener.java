@@ -17,12 +17,12 @@ public class GenericListener<D, R extends GenericSpeak> {
         return executor.apply(clazz.cast(data));
     }
 
-    public Class<D> getDataClass() {
+    public Class<D> getListenClass() {
          return this.clazz;
     }
 
-    public GenericListener(Class<D> clazz, Function<D, R> executor) {
-        this.clazz = clazz;
+    public GenericListener(Class<D> listenClass, Function<D, R> executor) {
+        this.clazz = listenClass;
         this.executor = executor;
     }
 }

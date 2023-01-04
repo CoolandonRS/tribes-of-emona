@@ -6,15 +6,16 @@ import lombok.Value;
 import net.numra.emonatribes.tribes.hooks.sound.IncompatibleSpeakException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Value
 @EqualsAndHashCode(callSuper = false)
 public class MultiSpeak extends GenericSpeak {
-    List<? extends GenericSpeak> speaks;
+    List<GenericSpeak> speaks;
 
     public List<? extends GenericSpeak> getSpeaks() {
-        return new ArrayList<>(speaks);
+        return Collections.unmodifiableList(speaks);
     }
 
     @SneakyThrows

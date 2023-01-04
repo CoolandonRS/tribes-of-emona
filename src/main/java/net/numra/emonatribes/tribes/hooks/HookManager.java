@@ -2,9 +2,7 @@ package net.numra.emonatribes.tribes.hooks;
 
 import net.numra.emonatribes.misc.IncompatibleDataException;
 import net.numra.emonatribes.tribes.hooks.sound.listen.*;
-import net.numra.emonatribes.tribes.hooks.sound.speak.FloatSpeak;
-import net.numra.emonatribes.tribes.hooks.sound.speak.GenericSpeak;
-import net.numra.emonatribes.tribes.hooks.sound.speak.VoidSpeak;
+import net.numra.emonatribes.tribes.hooks.sound.speak.*;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -15,8 +13,8 @@ public class HookManager {
     private final EnumMap<HookType, List<GenericListener<?, ?>>> hookMap;
     private final EnumMap<HookType, HookClassPair> classMap;
 
-    public <T extends GenericListener<?, ?>> void addHook(HookType type, T hook) throws IncompatibleDataException {
-        if (!hook.getDataClass().isAssignableFrom(classMap.get(type).getListen())) throw new IncompatibleDataException();
+    public <T extends GenericListener<?, ? extends GenericSpeak>> void addHook(HookType type, T hook) throws IncompatibleDataException {
+        if (!hook.getListenClass().isAssignableFrom(classMap.get(type).getListen())) throw new IncompatibleDataException();
         hookMap.get(type).add(hook);
     }
 
@@ -36,12 +34,17 @@ public class HookManager {
         hookMap = new EnumMap<>(HookType.class);
         Arrays.stream(HookType.values()).forEach(k -> hookMap.put(k, new ArrayList<>()));
         this.classMap = new EnumMap<>(Map.ofEntries(
-                entry(HookType.DropItem, new HookClassPair(DropItemListen.class, VoidSpeak.class)),
-                entry(HookType.Death, new HookClassPair(DeathListen.class, VoidSpeak.class)),
+                entry(HookType.Death, new HookClassPair(DamageSourceListen.class, VoidSpeak.class)),
                 entry(HookType.Damaged, new HookClassPair(DamagedListen.class, FloatSpeak.class)),
                 entry(HookType.EntityInteract, new HookClassPair(EntityInteractListen.class, VoidSpeak.class)),
                 entry(HookType.Attack, new HookClassPair(AttackListen.class, FloatSpeak.class)),
-                entry(HookType.SweepingAttack, new HookClassPair(AttackListen.class, FloatSpeak.class))
+                entry(HookType.SweepingAttack, new HookClassPair(AttackListen.class, FloatSpeak.class)),
+                entry(HookType.Sleep, new HookClassPair(BlockPosListen.class, SleepSpeak.class)),
+                entry(HookType.Jump, new HookClassPair(PlayerListen.class, VoidSpeak.class)),
+                entry(HookType.Fall, new HookClassPair(FallListen.class, MultiSpeak.class)), // MultiSpeak of [FloatSpeak, FloatSpeak]
+                entry(HookType.AddXp, new HookClassPair(IntListen.class, IntSpeak.class)),
+                entry(HookType.Hunger, new HookClassPair(FloatListen.class, FloatSpeak.class)),
+                entry(HookType.DropItem, new HookClassPair(ItemStackListen.class, VoidSpeak.class))
         ));
         if (!Arrays.stream(HookType.values()).allMatch(classMap::containsKey)) throw new RuntimeException("classMap in HookManager incomplete");
     }

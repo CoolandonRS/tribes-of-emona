@@ -5,7 +5,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 
 @Value
-public class DropItemListen {
+public class ItemStackListen {
     ItemStack itemStack;
     PlayerEntity player;
 }

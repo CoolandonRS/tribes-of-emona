@@ -7,5 +7,9 @@ public enum HookType {
     Attack, // MIXED
     SweepingAttack, // MIXED
     Sleep, // SERVER
-    Jump, DropItem // SERVER
+    Jump, // MIXED
+    Fall, // MIXED
+    AddXp, // MIXED
+    Hunger, // MIXED
+    DropItem // SERVER
 }

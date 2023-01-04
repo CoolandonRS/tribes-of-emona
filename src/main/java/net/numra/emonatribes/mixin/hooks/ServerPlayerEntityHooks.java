@@ -35,11 +35,11 @@ public class ServerPlayerEntityHooks {
     }
     @Inject(at = @At("HEAD"), method = "dropItem(Lnet/minecraft/item/ItemStack;ZZ)Lnet/minecraft/entity/ItemEntity;")
     private void dropHook(ItemStack stack, boolean throwRandomly, boolean retainOwnership, CallbackInfoReturnable<ItemEntity> cir) {
-        trigger(HookType.DropItem, new DropItemListen(stack, this.asPE()), VoidSpeak.class);
+        trigger(HookType.DropItem, new ItemStackListen(stack, this.asPE()), VoidSpeak.class);
     }
     @Inject(at = @At("HEAD"), method = "onDeath")
     private void deathHook(DamageSource damageSource, CallbackInfo ci) {
-        trigger(HookType.Death, new DeathListen(damageSource, this.asPE()), VoidSpeak.class);
+        trigger(HookType.Death, new DamageSourceListen(damageSource, this.asPE()), VoidSpeak.class);
     }
 
     @ModifyVariable(at = @At("HEAD"), method = "damage", argsOnly = true)
@@ -53,7 +53,7 @@ public class ServerPlayerEntityHooks {
 
     @Inject(at = @At("HEAD"), method = "trySleep", cancellable = true)
     private void sleepHook(BlockPos pos, CallbackInfoReturnable<Either<PlayerEntity.SleepFailureReason, Unit>> cir) {
-        SleepSpeak consensus = new SleepSpeak(trigger(HookType.Sleep, new SleepListen(pos, this.asPE()), SleepSpeak.class));
+        SleepSpeak consensus = new SleepSpeak(trigger(HookType.Sleep, new BlockPosListen(pos, this.asPE()), SleepSpeak.class));
         if (consensus.getFailureReason() == null) return;
         cir.setReturnValue(Either.left(consensus.getFailureReason()));
     }
