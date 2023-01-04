@@ -8,17 +8,17 @@ import java.util.List;
 
 @Value
 @EqualsAndHashCode(callSuper = false)
-public class DamagedSpeak extends GenericSpeak {
-    float amountChange;
+public class FloatSpeak extends GenericSpeak {
+    float change;
 
-    public DamagedSpeak(List<? extends GenericSpeak> list) {
+    public FloatSpeak(List<? extends GenericSpeak> list) {
         float sum = 0.0F;
         for (GenericSpeak gs : list) {
-            if (gs instanceof DamagedSpeak ds) {
-                sum += ds.amountChange;
+            if (gs instanceof FloatSpeak fs) {
+                sum += fs.change;
             } else throw new IncompatibleSpeakException();
         }
-        this.amountChange = sum;
+        this.change = sum;
     }
 }
 

@@ -15,6 +15,10 @@ repositories {
 		name = "CottonMC"
 		url = "https://server.bbkr.space/artifactory/libs-release"
 	}
+	maven {
+		name = "JitPack"
+		url = "https://jitpack.io"
+	}
 }
 
 dependencies {
@@ -26,8 +30,12 @@ dependencies {
 
 	modImplementation "io.github.cottonmc:LibGui:${project.libgui_version}"
 
-	compileOnly 'org.projectlombok:lombok:1.18.24'
-	annotationProcessor 'org.prokectlombok:lombok:1.18.24'
+	compileOnly "org.projectlombok:lombok:${project.lombok_version}"
+	annotationProcessor "org.prokectlombok:lombok:${project.lombok_version}"
+
+	implementation "com.github.LlamaLad7:MixinExtras:${project.mixinextras_version}"
+	annotationProcessor "com.github.LlamaLad7:MixinExtras:${project.mixinextras_version}"
+	include "com.github.LlamaLad7:MixinExtras:${project.mixinextras_version}"
 }
 
 processResources {

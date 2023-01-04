@@ -4,11 +4,13 @@
   "package": "net.numra.emonatribes.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "hooks.PlayerEntityHooks"
+    "hooks.ServerPlayerEntityHooks"
   ],
   "client": [
+    "hooks.PlayerEntityHooks"
   ],
-  "server": [],
+  "server": [
+  ],
   "injectors": {
     "defaultRequire": 1
   }

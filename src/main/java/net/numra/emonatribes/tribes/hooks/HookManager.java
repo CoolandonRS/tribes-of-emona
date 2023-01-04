@@ -1,11 +1,10 @@
 package net.numra.emonatribes.tribes.hooks;
 
 import net.numra.emonatribes.misc.IncompatibleDataException;
-import net.numra.emonatribes.tribes.hooks.sound.listen.DamagedListen;
-import net.numra.emonatribes.tribes.hooks.sound.listen.DeathListen;
-import net.numra.emonatribes.tribes.hooks.sound.listen.DropItemListen;
-import net.numra.emonatribes.tribes.hooks.sound.speak.DamagedSpeak;
+import net.numra.emonatribes.tribes.hooks.sound.listen.*;
+import net.numra.emonatribes.tribes.hooks.sound.speak.FloatSpeak;
 import net.numra.emonatribes.tribes.hooks.sound.speak.GenericSpeak;
+import net.numra.emonatribes.tribes.hooks.sound.speak.VoidSpeak;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -28,18 +27,21 @@ public class HookManager {
     public <R extends GenericSpeak> List<R> trigger(HookType type, Object data, Class<R> expectedReturnType) throws IncompatibleDataException {
         if (!data.getClass().isAssignableFrom(classMap.get(type).getListen())) throw new IncompatibleDataException();
         Class<?> speakClass = classMap.get(type).getSpeak();
-        if (speakClass != null && !speakClass.isAssignableFrom(expectedReturnType)) throw new IncompatibleDataException();
+        if (speakClass != VoidSpeak.class && !speakClass.isAssignableFrom(expectedReturnType)) throw new IncompatibleDataException();
         Stream<?> list = hookMap.get(type).stream().map(gl -> gl.execute(data));
-        return speakClass == null ? List.of() : list.map(expectedReturnType::cast).toList();
+        return speakClass == VoidSpeak.class ? List.of() : list.map(expectedReturnType::cast).toList();
     }
 
     public HookManager() {
         hookMap = new EnumMap<>(HookType.class);
         Arrays.stream(HookType.values()).forEach(k -> hookMap.put(k, new ArrayList<>()));
         this.classMap = new EnumMap<>(Map.ofEntries(
-                entry(HookType.DropItem, new HookClassPair(DropItemListen.class, null)),
-                entry(HookType.Death, new HookClassPair(DeathListen.class, null)),
-                entry(HookType.Damaged, new HookClassPair(DamagedListen.class, DamagedSpeak.class))
+                entry(HookType.DropItem, new HookClassPair(DropItemListen.class, VoidSpeak.class)),
+                entry(HookType.Death, new HookClassPair(DeathListen.class, VoidSpeak.class)),
+                entry(HookType.Damaged, new HookClassPair(DamagedListen.class, FloatSpeak.class)),
+                entry(HookType.EntityInteract, new HookClassPair(EntityInteractListen.class, VoidSpeak.class)),
+                entry(HookType.Attack, new HookClassPair(AttackListen.class, FloatSpeak.class)),
+                entry(HookType.SweepingAttack, new HookClassPair(AttackListen.class, FloatSpeak.class))
         ));
         if (!Arrays.stream(HookType.values()).allMatch(classMap::containsKey)) throw new RuntimeException("classMap in HookManager incomplete");
     }

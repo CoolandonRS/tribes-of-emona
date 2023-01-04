@@ -23,6 +23,9 @@
     ],
     "client": [
       "net.numra.emonatribes.EmonaTribesClient"
+    ],
+    "preLaunch": [
+      "net.numra.emonatribes.EmonaTribesPreLaunch"
     ]
   },
   "mixins": [
